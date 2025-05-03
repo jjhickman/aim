@@ -16,11 +16,11 @@ framework to enable compatibility with a wide range of platforms and devices. Fo
 can create the backend service in python and the UI as an elegant web app. Or, you can do the
 whole thing in javascript, or something else!
 
-**Your system needs to visualize an arbitrary number of robots (each robot is an instance of
-Machine below) on an interactive map in GPS space, for example leveraging Google Maps as
-canvas. When left alone, each robot moves in random brownian motion around the map when
-unpaused, but can be paused via the UI to freeze. It can also be unpaused to resume moving
-around.**
+**Your system needs to** 
+1. Visualize an arbitrary number of robots (each robot is an instance of `Machine` below) on an interactive map in GPS space, for example leveraging Google Maps as
+canvas.
+2. When left alone, each robot moves in random brownian motion around the map when unpaused, but can be paused via the UI to freeze.
+3. It can also be unpaused to resume moving around.
 
 ## API Definition
 ```proto
