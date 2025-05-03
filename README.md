@@ -55,6 +55,7 @@ service MachineMap {
   rpc MachineStream(MachineStreamRequest) returns (stream Machine) {}
 }
 ```
+
 ## Tasks
 1. Backend
   - [ ] Implement gRPC skeleton service
@@ -87,7 +88,7 @@ Running this app only requires Docker and a web browser.
 1. Unzip archive of project
 2. Enter project root directory in terminal with `cd <./path/to/project>`
 3. Deploy app containers with `docker compose up`
-4. In web browser visit the IP address of the server host on port 8000 (`localhost:8000` if using browser on same machine)
+4. In web browser visit the IP address of the server host on port 8081 (`localhost:8081` if using browser on same machine)
 
 ## Deliverables
 Once you have built your solution, please submit an archive containing:

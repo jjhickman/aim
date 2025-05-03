@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - 8081:8081
+    stop_signal: SIGINT
+    depends_on:
+      - envoy
+      - server
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports: # just for debugging
+      - 50051:50051
+  envoy:
+    build:
+      context: .
+      dockerfile: Dockerfile.envoy
+    ports:
+      - 8000:8000
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml

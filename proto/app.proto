@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+message Machine {
+  uint32 id = 1;
+  GPS location = 2;
+  float fuel_level = 3;
+  bool is_paused = 4;
+}
+
+message GPS {
+    double lat = 1;
+    double lon = 2;
+    float alt = 3;
+}
+
+message MachineStreamRequest {}
+
+// gRPC schema definition
+service MachineMap {
+  rpc Pause(Machine) returns (Machine) {}
+  rpc UnPause(Machine) returns (Machine) {}
+  rpc MachineStream(MachineStreamRequest) returns (stream Machine) {}
+}

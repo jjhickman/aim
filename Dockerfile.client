@@ -1,0 +1,28 @@
+FROM node:current-alpine as build
+
+RUN apk add --no-cache protoc
+
+WORKDIR /app
+
+ENV protoc_gen_grpc_web=./node_modules/.bin/protoc-gen-grpc-web
+
+COPY ./client/package*.json .
+
+RUN npm install
+
+COPY ./proto/app.proto .
+
+
+RUN mkdir -p ./src/proto
+RUN protoc -I=. app.proto \
+  --plugin=protoc-gen-grpc-web=${protoc_gen_grpc_web} \
+  --js_out=import_style=commonjs:./src \
+  --grpc-web_out=import_style=typescript,mode=grpcwebtext:./src
+
+
+COPY ./client . 
+
+RUN npm run build
+
+EXPOSE 8081
+CMD ["npm", "run", "preview"]

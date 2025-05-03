@@ -1,0 +1,15 @@
+FROM node:current-alpine
+
+WORKDIR /app
+
+COPY ./server/package*.json .
+
+RUN npm install
+
+RUN mkdir -p ./proto
+COPY ./proto/app.proto ./proto
+RUN npx protoc --ts_out . --proto_path proto app.proto
+
+COPY ./server/*.ts .
+
+CMD ["node", "--experimental-transform-types",  "index.ts"]
