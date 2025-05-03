@@ -75,10 +75,10 @@ service MachineMap {
   - [ ] Integrate with UI
   - [ ] End to end test UI talking to backend through proxy
 5. Environment
-  - [ ] Configure client Dockerfile for UI image
-  - [ ] Configure server Dockerfile for gRPC API image
-  - [ ] Configure gRPC proxy Dockerfile
-  - [ ] Create Docker compose deployment
+  - [x] Configure client Dockerfile for UI image
+  - [x] Configure server Dockerfile for gRPC API image
+  - [x] Configure gRPC proxy Dockerfile
+  - [x] Create Docker compose deployment
 
 
 ## Setup and Running App
