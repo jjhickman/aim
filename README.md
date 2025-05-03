@@ -65,13 +65,14 @@ service MachineMap {
   - [ ] Implement `MachineStream` rpc
   - [ ] Test with gRPC client utility
 2. Frontend
-  - [ ] Implement skeleton UI with canvas
+  - [x] Implement skeleton UI with canvas
   - [ ] Incorporate Google Maps into canvas
+  - [ ] Allow users to add new machines onto map
   - [ ] Handle onClick for pausing and unpausing robot that is clicked on in canvas
   - [ ] Incorporate gRPC client
   - [ ] Use NGINX to host UI and proxy requests
 3. gRPC Envoy Proxy
-  - [ ] Configure Envoy proxy
+  - [x] Configure Envoy proxy
   - [ ] Integrate with UI
   - [ ] End to end test UI talking to backend through proxy
 5. Environment
