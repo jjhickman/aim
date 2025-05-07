@@ -1,15 +1,19 @@
-FROM node:current-alpine
+FROM python
 
 WORKDIR /app
 
-COPY ./server/package*.json .
+RUN apt update && apt install -y --no-install-recommends build-essential protobuf-compiler 
+RUN pip3 install --upgrade pip
 
-RUN npm install
+COPY ./server/requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install --upgrade protobuf
 
-RUN mkdir -p ./proto
-COPY ./proto/app.proto ./proto
-RUN npx protoc --ts_out . --proto_path proto app.proto
+RUN mkdir -p proto
+COPY ./proto/*.proto ./proto/
+RUN python -m grpc_tools.protoc -I ./proto --python_out=. --grpc_python_out=. ./proto/machine.proto
 
-COPY ./server/*.ts .
+COPY ./server/*.py .
 
-CMD ["node", "--experimental-transform-types",  "index.ts"]
+EXPOSE 50051
+CMD ["python3", "main.py"]

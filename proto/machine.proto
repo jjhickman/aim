@@ -15,7 +15,6 @@ message GPS {
 
 message MachineStreamRequest {}
 
-// gRPC schema definition
 service MachineMap {
   rpc Pause(Machine) returns (Machine) {}
   rpc UnPause(Machine) returns (Machine) {}

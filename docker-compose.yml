@@ -8,6 +8,11 @@ services:
     ports:
       - 8081:8081
     stop_signal: SIGINT
+    environment:
+      - CENTER_LON
+      - CENTER_LAT
+      - MAP_X
+      - MAP_Y
     depends_on:
       - envoy
       - server
@@ -17,6 +22,14 @@ services:
       dockerfile: Dockerfile.server
     ports: # just for debugging
       - 50051:50051
+    environment:
+      - CENTER_LON
+      - CENTER_LAT
+      - NUM_MACHINES
+      - DELTA
+      - MAX_ALT
+      - MAP_X
+      - MAP_Y
   envoy:
     build:
       context: .
