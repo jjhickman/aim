@@ -1,8 +1,7 @@
-FROM python
+FROM python:slim-bookworm
 
 WORKDIR /app
 
-RUN apt update && apt install -y --no-install-recommends build-essential protobuf-compiler 
 RUN pip3 install --upgrade pip
 
 COPY ./server/requirements.txt .
@@ -11,7 +10,7 @@ RUN pip install --upgrade protobuf
 
 RUN mkdir -p proto
 COPY ./proto/*.proto ./proto/
-RUN python -m grpc_tools.protoc -I ./proto --python_out=. --grpc_python_out=. ./proto/machine.proto
+RUN python3 -m grpc_tools.protoc -I ./proto --python_out=. --grpc_python_out=. ./proto/machine.proto
 
 COPY ./server/*.py .
 

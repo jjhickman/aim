@@ -2,7 +2,7 @@ import numpy as np
 import random
 import machine_pb2
 import os
-
+import time
 class Machines:
     # Class variable
     num_machines = 0
@@ -21,19 +21,20 @@ class Machines:
         self.center_lat = center_lat
         self.delta = delta
         self.max_alt = max_alt
-        map_x_str = os.environ("MAP_X", "20.0")
-        map_y_str = os.environ("MAP_Y", "20.0")
-        if not map_x_str.isnumeric():
+        map_x_str = os.environ.get("MAP_X")
+        map_y_str = os.environ.get("MAP_Y")
+        if map_x_str is None or not map_x_str.isnumeric():
             self.map_x = 20.0
         else:
             self.map_x = float(map_x_str)
-        if not map_y_str.isnumeric():
+        if map_y_str is None or not map_y_str.isnumeric():
             self.map_y = 20.0
         else:
             self.map_y = float(map_y_str)
         self.generate_machines()
 
     def generate_machines(self):
+        """Initialized list of machines, with id serving as index"""
         print(f"Generating {self.num_machines} machines")
         for index in range(self.num_machines):
             lat = self.center_lat + random.uniform(-(self.map_x / 2), self.map_x / 2)
@@ -61,10 +62,12 @@ class Machines:
             return machine_pb2.Machine()
         elif self.machines[id].is_paused:
             print(f"Machine {id} is already paused")
-        self.machines[id].is_paused = True
+        else:
+            self.machines[id].is_paused = True
         return self.machines[id]
 
     def random_movement(self, machine):
+        """Makes a random movement in 3d space according to delta, while updating fuel level"""
         p1 = np.array([machine.location.lat, machine.location.lon, machine.location.lat])
 
         lat = machine.location.lat + random.uniform(-self.delta, self.delta)
@@ -98,11 +101,15 @@ class Machines:
 
         return self.machines[machine.id]
 
-    def update_location(self, id):
+    def get_machine(self, id):
         if id >= len(self.machines):
             print(f"Machine with id {id} exceeds range")
             return None
         elif self.machines[id].is_paused:
             print(f"Machine {id} is paused")
             return None
-        return self.random_movement(self.machines[id])
+        return self.machines[id]
+
+    def update_locations(self):
+        for id in range(len(self.machines)):
+            self.random_movement(self.machines[id])
