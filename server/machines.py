@@ -2,7 +2,8 @@ import numpy as np
 import random
 import machine_pb2
 import os
-import time
+import logging
+
 class Machines:
     # Class variable
     num_machines = 0
@@ -35,7 +36,7 @@ class Machines:
 
     def generate_machines(self):
         """Initialized list of machines, with id serving as index"""
-        print(f"Generating {self.num_machines} machines")
+        logging.info(f"Generating {self.num_machines} machines")
         for index in range(self.num_machines):
             lat = self.center_lat + random.uniform(-(self.map_x / 2), self.map_x / 2)
             lon = self.center_lon + random.uniform(-(self.map_y / 2), self.map_y / 2)
@@ -46,24 +47,21 @@ class Machines:
 
     def unpause_machine(self, id):
         if id >= len(self.machines):
-            print(f"Machine with id {id} exceeds range")
-            return machine_pb2.Machine()
-        elif not self.machines[id].is_paused:
-            print(f"Machine {id} is already in motion")
+            logging.debug(f"Machine with id {id} exceeds range")
+            return self.machines[-1]
         elif self.machines[id].fuel_level <= 0:
-            print(f"Machine {id} is out of fuel")
-        else:
-            self.machines[id].is_paused = False
+            logging.debug(f"Machine {id} is out of fuel")
+            return self.machines[id]
+        self.machines[id].is_paused = False
         return self.machines[id]
 
     def pause_machine(self, id):
         if id >= len(self.machines):
             print(f"Machine with id {id} exceeds range")
-            return machine_pb2.Machine()
+            return self.machines[-1]
         elif self.machines[id].is_paused:
             print(f"Machine {id} is already paused")
-        else:
-            self.machines[id].is_paused = True
+        self.machines[id].is_paused = True
         return self.machines[id]
 
     def random_movement(self, machine):
@@ -104,12 +102,12 @@ class Machines:
     def get_machine(self, id):
         if id >= len(self.machines):
             print(f"Machine with id {id} exceeds range")
-            return None
-        elif self.machines[id].is_paused:
-            print(f"Machine {id} is paused")
-            return None
+            return self.machines[-1]
         return self.machines[id]
 
     def update_locations(self):
         for id in range(len(self.machines)):
-            self.random_movement(self.machines[id])
+            if self.machines[id].is_paused:
+                continue
+            else:
+                self.random_movement(self.machines[id])

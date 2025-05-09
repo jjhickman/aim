@@ -1,6 +1,7 @@
-from concurrent import futures
-import grpc
-import time
+from grpc import aio
+import nest_asyncio
+import asyncio
+import logging
 import sys
 import os
 
@@ -8,10 +9,15 @@ sys.path.append(".")
 import machine_pb2_grpc
 import machines
 
+nest_asyncio.apply()
 class MachineService(machine_pb2_grpc.MachineMapServicer):
     
     m = None
+    mutex = asyncio.Lock()
     def __init__(self):
+        self.create()
+
+    def create(self):
         num_machines_str = os.environ.get("NUM_MACHINES")
         center_lon_str = os.environ.get("CENTER_LON")
         center_lat_str = os.environ.get("CENTER_LAT")
@@ -47,47 +53,64 @@ class MachineService(machine_pb2_grpc.MachineMapServicer):
         else:
             max_alt = float(max_alt_str)
         self.m = machines.Machines(num_machines=num_machines, center_lon=center_lon, center_lat=center_lat, delta=delta, max_alt=max_alt)
+        asyncio.create_task(self.move_machines())
+            
+    async def move_machines(self):
+        logging.info("Starting async movement update loop")
+        while True:
+            await asyncio.sleep(0.5)
+            await self.mutex.acquire()
+            try:
+                self.m.update_locations()
+            finally:
+                self.mutex.release()
 
-    def Pause(self, request, context):
+    async def Pause(self, request, context):
         """Pause machine by specified id in the request if it is moving"""
-        print(f"Pausing machine {request.id}")
-        updated_machine = self.m.pause_machine(request.id)
-        self.m.update_locations() # for simplicity, only update locations per request
-        return updated_machine
+        await self.mutex.acquire()
+        try:
+            logging.info(f"Pausing machine {request.id}")
+            updated_machine = self.m.pause_machine(request.id)
+            return updated_machine
+        finally:
+            self.mutex.release()
 
-    def UnPause(self, request, context):
+    async def UnPause(self, request, context):
         """UnPause machine by specified id in the request if it is stationary"""
-        print(f"Moving machine {request.id}")
-        self.m.update_locations() # for simplicity, only update locations per request
-        updated_machine = self.m.unpause_machine(request.id)
-        return updated_machine
+        await self.mutex.acquire()
+        try:
+            logging.info(f"Moving machine {request.id}")
+            updated_machine = self.m.unpause_machine(request.id)
+            return updated_machine
+        finally:
+            self.mutex.release()
 
-    def MachineStream(
+    async def MachineStream(
         self,
         request_iterator,
-        context: grpc.ServicerContext,
+        context,
     ):
         """Stream machines one at a time with updated locations per request iterable"""
-        print("Starting machine stream")
+        logging.info("Starting machine stream")
         index = 0
-        while context.is_active():
-            time.sleep(0.1)
-            print(f"Streaming machine {index}")
-            yield self.m.get_machine(index)
-            self.m.update_locations() # for simplicity, only update locations per request
-            index = index + 1 % self.m.num_machines
+        while True:
+            await asyncio.sleep(0.5)
+            logging.debug(f"Streaming machine {index}")
+            await self.mutex.acquire()
+            try:
+                yield self.m.get_machine(index)
+            finally:
+                self.mutex.release()
+                index = index + 1 % self.m.num_machines
 
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+async def serve():                                                      
+    server = aio.server() 
     machine_pb2_grpc.add_MachineMapServicer_to_server(MachineService(), server)
     server.add_insecure_port('[::]:50051')
-    server.start()
-    print("Server started. Awaiting jobs...")
-    try:
-        while True: # since server.start() will not block, a sleep-loop is added to keep alive
-            time.sleep(60*60*24)
-    except KeyboardInterrupt:
-        server.stop(0)
+    logging.info("Server started. Awaiting jobs...")
+    await server.start()
+    await server.wait_for_termination()
 
 if __name__ == '__main__':
-    serve()
+    logging.basicConfig(level=logging.INFO)                                     
+    asyncio.run(serve())
