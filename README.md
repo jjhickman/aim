@@ -92,7 +92,7 @@ service MachineMap {
 
 ## Setup and Running App
 
-Running this app only requires Docker and a web browser.
+Running this app only requires Docker on the host and a web browser.
 
 1. Unzip archive of project
 2. Enter project root directory in terminal with `cd <./path/to/project>`
@@ -105,5 +105,3 @@ Once you have built your solution, please submit an archive containing:
 - [x] Your project's source code (stripped of dependencies).
 - [x] A readme file which describes how to set-up and run the application (automated
 environment setup is a plus).
-
-...
