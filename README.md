@@ -68,16 +68,26 @@ service MachineMap {
   - [x] Implement skeleton UI with canvas
   - [x] Incorporate Maps into canvas
   - [x] Handle onClick for pausing and unpausing robot that is clicked on in canvas
-  - [x] Incorporate gRPC client
-3. gRPC Envoy Proxy
-  - [x] Configure Envoy proxy
-  - [x] Integrate with UI
-  - [x] End to end test UI talking to backend through proxy
+  - [x] Websocket and REST client
+3. API
+  - [x] Implement websocket server
+  - [x] Implement Express server and combine with websocket server
+  - [x] Add gRPC client
+  - [x] Implement both ws and rest endpoints
 5. Environment
   - [x] Configure client Dockerfile for UI image
   - [x] Configure server Dockerfile for gRPC API image
-  - [x] Configure gRPC proxy Dockerfile
+  - [x] Configure api Dockerfile
   - [x] Create Docker compose deployment
+6. Testing
+  - [x] Test gRPC server with utility
+  - [ ] Integration testing end-to-end
+  - [ ] Test on mobile browser
+7. Finishing touches
+  - [ ] Cleanup client with comments
+  - [ ] Cleanup api with comments
+  - [ ] Cleanup server with comments
+  - [ ] Finalize README.md
 
 
 ## Setup and Running App
