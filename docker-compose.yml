@@ -13,15 +13,17 @@ services:
       - CENTER_LAT
       - MAP_X
       - MAP_Y
+    networks:
+      - frontend
     depends_on:
-      - envoy
+      - api
       - server
   server:
     build:
       context: .
       dockerfile: Dockerfile.server
-    ports: # just for debugging
-      - 50051:50051
+    networks:
+      - backend
     environment:
       - CENTER_LON
       - CENTER_LAT
@@ -30,11 +32,13 @@ services:
       - MAX_ALT
       - MAP_X
       - MAP_Y
-  envoy:
+  api:
     build:
       context: .
-      dockerfile: Dockerfile.envoy
-    ports:
-      - 8000:8000
-    volumes:
-      - ./envoy.yaml:/etc/envoy/envoy.yaml
+      dockerfile: Dockerfile.api
+    networks:
+      - frontend
+      - backend
+networks:
+  frontend:
+  backend:

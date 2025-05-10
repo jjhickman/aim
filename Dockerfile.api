@@ -3,15 +3,16 @@ FROM --platform=linux/amd64 node:bookworm-slim
 
 WORKDIR /app
 
+RUN apt update && apt install build-essential -y --no-install-recommends
 RUN npm install -g @protobuf-ts/plugin protoc
-COPY ./client/package*.json .
+COPY ./api/package*.json .
 
 RUN npm install
 
 COPY ./proto/machine.proto .
-COPY ./client .
-RUN npx protoc --ts_out ./src --proto_path . machine.proto
+COPY ./api .
+RUN npx protoc --ts_out . --proto_path . machine.proto
 RUN npm run build
 
-EXPOSE 4173
-CMD ["npm", "run", "preview"]
+EXPOSE 8000
+CMD ["node", "index.js"]

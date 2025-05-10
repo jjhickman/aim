@@ -58,23 +58,21 @@ service MachineMap {
 
 ## Tasks
 1. Backend
-  - [ ] Implement gRPC skeleton service
-  - [ ] Create brownian motion randomization algorithm
-  - [ ] Implement `Pause` rpc
-  - [ ] Implement `UnPause` rpc
-  - [ ] Implement `MachineStream` rpc
-  - [ ] Test with gRPC client utility
+  - [x] Implement gRPC skeleton service
+  - [x] Create brownian motion randomization algorithm
+  - [x] Implement `Pause` rpc
+  - [x] Implement `UnPause` rpc
+  - [x] Implement `MachineStream` rpc
+  - [x] Test with gRPC client utility
 2. Frontend
   - [x] Implement skeleton UI with canvas
-  - [ ] Incorporate Google Maps into canvas
-  - [ ] Allow users to add new machines onto map
-  - [ ] Handle onClick for pausing and unpausing robot that is clicked on in canvas
-  - [ ] Incorporate gRPC client
-  - [ ] Use NGINX to host UI and proxy requests
+  - [x] Incorporate Maps into canvas
+  - [x] Handle onClick for pausing and unpausing robot that is clicked on in canvas
+  - [x] Incorporate gRPC client
 3. gRPC Envoy Proxy
   - [x] Configure Envoy proxy
-  - [ ] Integrate with UI
-  - [ ] End to end test UI talking to backend through proxy
+  - [x] Integrate with UI
+  - [x] End to end test UI talking to backend through proxy
 5. Environment
   - [x] Configure client Dockerfile for UI image
   - [x] Configure server Dockerfile for gRPC API image
@@ -89,11 +87,11 @@ Running this app only requires Docker and a web browser.
 1. Unzip archive of project
 2. Enter project root directory in terminal with `cd <./path/to/project>`
 3. Deploy app containers with `docker compose up`
-4. In web browser visit the IP address of the server host on port 8081 (`localhost:8081` if using browser on same machine)
+4. In web browser visit the IP address of the server host on port 4173 (`localhost:4173` if using browser on same machine)
 
 ## Deliverables
 Once you have built your solution, please submit an archive containing:
-- [ ] A working application (we will be trying it out and extensively testing it programmatically) which runs on the most common mobile browsers (Safari, Chrome for Android, etc).
+- [x] A working application (we will be trying it out and extensively testing it programmatically) which runs on the most common mobile browsers (Safari, Chrome for Android, etc).
 - [x] Your project's source code (stripped of dependencies).
 - [x] A readme file which describes how to set-up and run the application (automated
 environment setup is a plus).

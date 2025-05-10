@@ -1,0 +1,29 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc index.ts",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@protobuf-ts/grpc-transport": "^2.10.0",
+    "@protobuf-ts/plugin": "^2.10.0",
+    "@protobuf-ts/runtime-rpc": "^2.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.3",
+    "@protobuf-ts/runtime": "^2.10.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "logger": "^0.0.1",
+    "ws": "^8.18.2"
+  }
+}
