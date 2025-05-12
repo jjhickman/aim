@@ -22,43 +22,47 @@ class MachineService(machine_pb2_grpc.MachineMapServicer):
         center_lon_str = os.environ.get("CENTER_LON")
         center_lat_str = os.environ.get("CENTER_LAT")
         delta_str = os.environ.get("DELTA")
-        max_alt_str = os.environ.get("MAX_ALT")
+        num_steps_str = os.environ.get("NUM_STEPS")
         num_machines = 0
+        num_steps = 0
         center_lon = 0
         center_lat = 0
-        delta = 0.0
-        max_alt = 0
+        delta = 0.001
         if num_machines_str is None or not num_machines_str.isnumeric():
             num_machines = 100
         else:
             num_machines = int(num_machines_str)
+            if num_machines == 0:
+                num_machines = 100
+
+        if num_steps_str is None or not num_steps_str.isnumeric():
+            num_steps = 1000
+        else:
+            num_steps = int(num_steps_str)
+            if num_steps == 0:
+                num_machines = 1000
 
         if center_lon_str is None or not center_lon_str.isnumeric():
-            center_lon = -50
+            center_lon = -98.5795
         else:
             center_lon = float(center_lon_str)
 
         if center_lat_str is None or not center_lat_str.isnumeric():
-            center_lat = 50
+            center_lat = 39.8283
         else:
             center_lon = float(center_lat_str)
 
         if delta_str is None or not delta_str.isnumeric():
-            delta = 0.0001
+            delta = 0.001
         else:
             delta = float(delta_str)
-
-        if max_alt_str is None or not max_alt_str.isnumeric():
-            max_alt = 1000
-        else:
-            max_alt = float(max_alt_str)
-        self.m = machines.Machines(num_machines=num_machines, center_lon=center_lon, center_lat=center_lat, delta=delta, max_alt=max_alt)
+        self.m = machines.Machines(num_machines=num_machines, center_lon=center_lon, center_lat=center_lat, delta=delta, num_steps=num_steps)
         asyncio.create_task(self.move_machines())
             
     async def move_machines(self):
         logging.info("Starting async movement update loop")
         while True:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
             await self.mutex.acquire()
             try:
                 self.m.update_locations()
@@ -94,14 +98,13 @@ class MachineService(machine_pb2_grpc.MachineMapServicer):
         logging.info("Starting machine stream")
         index = 0
         while True:
-            await asyncio.sleep(0.5)
-            logging.debug(f"Streaming machine {index}")
+            await asyncio.sleep(0.2)
             await self.mutex.acquire()
             try:
                 yield self.m.get_machine(index)
+                index = (index + 1) % self.m.num_machines
             finally:
                 self.mutex.release()
-                index = index + 1 % self.m.num_machines
 
 async def serve():                                                      
     server = aio.server() 

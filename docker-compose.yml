@@ -13,8 +13,6 @@ services:
       - CENTER_LAT
       - MAP_X
       - MAP_Y
-    networks:
-      - frontend
     depends_on:
       - api
       - server
@@ -29,16 +27,18 @@ services:
       - CENTER_LAT
       - NUM_MACHINES
       - DELTA
-      - MAX_ALT
+      - NUM_STEPS
       - MAP_X
       - MAP_Y
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
+    depends_on:
+      - server
+    ports:
+      - 8000:8000
     networks:
-      - frontend
       - backend
 networks:
-  frontend:
   backend:

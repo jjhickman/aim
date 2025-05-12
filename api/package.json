@@ -1,10 +1,10 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "build": "npx tsc index.ts",
-    "start": "node index.js",
+    "build": "npx tsc -p tsconfig.json",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,6 +14,10 @@
     "@protobuf-ts/grpc-transport": "^2.10.0",
     "@protobuf-ts/plugin": "^2.10.0",
     "@protobuf-ts/runtime-rpc": "^2.10.0",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/logger": "^0.0.5",
+    "@types/ws": "^8.18.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

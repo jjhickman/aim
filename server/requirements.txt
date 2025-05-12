@@ -4,3 +4,4 @@ protobuf
 numpy
 asyncio
 nest-asyncio
+scipy

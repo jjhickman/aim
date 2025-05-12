@@ -81,13 +81,13 @@ service MachineMap {
   - [x] Create Docker compose deployment
 6. Testing
   - [x] Test gRPC server with utility
-  - [ ] Integration testing end-to-end
-  - [ ] Test on mobile browser
+  - [x] Integration testing end-to-end
+  - [x] Test on mobile browser
 7. Finishing touches
-  - [ ] Cleanup client with comments
-  - [ ] Cleanup api with comments
-  - [ ] Cleanup server with comments
-  - [ ] Finalize README.md
+  - [x] Cleanup client with comments
+  - [x] Cleanup api with comments
+  - [x] Cleanup server with comments
+  - [x] Finalize README.md
 
 
 ## Setup and Running App
@@ -98,6 +98,24 @@ Running this app only requires Docker on the host and a web browser.
 2. Enter project root directory in terminal with `cd <./path/to/project>`
 3. Deploy app containers with `docker compose up`
 4. In web browser visit the IP address of the server host on port 4173 (`localhost:4173` if using browser on same machine)
+
+## Developer Notes
+
+To experiment with the project, before running `docker compose up`, make a `.env` file with the following fields to experiment with:
+
+```sh
+NUM_MACHINES=100
+CENTER_LAT=39.8283 # determines center of map y in degrees
+CENTER_LON=-98.5795 # determines center of map x in degrees
+DELTA=0.25 # determines variance in movement along path
+NUM_STEPS=100000 # determines path of random walk
+MAP_X=5.0 # determines range of movement
+MAP_Y=15.0 # determines range of movement
+```
+
+Only real flaw with this is that the UI render state is a bit janky and as a result the movement of the robots get delayed. They still move and pause and unpause, but it is delayed before movement starts and it seems to have the updates buffered. That will have to be re explored.
+
+I opted not to use the altitude field because 1, I would need a pre defined 3D mesh of the terrain that the backend has knowledge of, and 2 I couldn't find a maps UI library that makes use of altitude anway.
 
 ## Deliverables
 Once you have built your solution, please submit an archive containing:
